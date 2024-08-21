@@ -1,28 +1,24 @@
-// src/components/Category.js
-import React, { useState } from 'react';
+import React from 'react';
 import Widget from './Widget';
-import AddWidgetForm from './AddWidgetForm';
+import './Category.css';
 
-const Category = ({ category }) => {
-  const [widgets, setWidgets] = useState(category.widgets);
-
-  const addWidget = (widget) => {
-    setWidgets([...widgets, widget]);
-  };
-
-  const removeWidget = (widgetId) => {
-    setWidgets(widgets.filter((widget) => widget.id !== widgetId));
-  };
+const Category = ({ category, removeWidget, searchTerm }) => {
+  const filteredWidgets = category.widgets.filter(widget =>
+    widget.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="category">
       <h2>{category.name}</h2>
-      <div className="widget-list">
-        {widgets.map((widget) => (
-          <Widget key={widget.id} widget={widget} removeWidget={() => removeWidget(widget.id)} />
+      <div className="widgets">
+        {filteredWidgets.map(widget => (
+          <Widget
+            key={widget.id}
+            widget={widget}
+            removeWidget={() => removeWidget(category.id, widget.id)}
+          />
         ))}
       </div>
-      <AddWidgetForm addWidget={addWidget} />
     </div>
   );
 };
